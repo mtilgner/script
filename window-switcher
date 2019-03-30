@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+
+# a window switcher for i3 similar to i3-py's winmenu example
+# pass a fuzzy finder command like dmenu or fzf as parameter
+
+import i3
+import subprocess
+import sys
+
+def win_switch(finder_command):
+
+    """
+    pipes a newline separated list of all open window-names to finder_command
+    the chosen window gets focus
+    """
+
+    windows = {}
+    instances = {}
+    workspaces = i3.get_workspaces()
+
+    for ws in workspaces:
+
+        ws_tree = i3.filter(num = ws['num'])
+        ws_wins = i3.filter(ws_tree, nodes = [])
+
+        # only go through windows in workspaces to avoid stuff like i3-bar
+
+        for win in ws_wins:
+
+            win_name = win['name']
+            win_id = win['id']
+
+            # enumerate windows with the same name
+
+            if win_name in instances:
+                instances[win_name] += 1
+                win_name = '%s [%d]' % (win_name, instances[win_name])
+            else:
+                instances[win_name] = 1
+
+            windows[win_name] = win_id
+
+    # start dmenu
+
+    finder_proc = subprocess.Popen(finder_command,
+            stdin = subprocess.PIPE,
+            stdout = subprocess.PIPE,
+            universal_newlines = True)
+
+    choices = '\n'.join(windows.keys())
+    out, err = finder_proc.communicate(choices)
+
+    choice_id = windows.get(out.rstrip())
+    # choice_id is None if choice is not a window name
+    if choice_id:
+        i3.focus(con_id = choice_id)
+
+if __name__ == '__main__':
+    win_switch(sys.argv[1:])

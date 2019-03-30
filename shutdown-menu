@@ -1,0 +1,25 @@
+#!/usr/bin/bash
+
+SHUTDOWN="shutdown"
+REBOOT="reboot"
+EXIT="logout"
+
+CHOICE=$(echo -e "$SHUTDOWN\n$REBOOT\n$EXIT" | dmenu -p "QUIT" -nb "#000000" -sb "#000000" -sf "#e8ea34" -fn "DejaVu Sans Mono:size=10")
+
+if [[ "$CHOICE" ]]
+then
+
+case "$CHOICE" in
+
+"$SHUTDOWN") systemctl poweroff
+;;
+
+"$REBOOT") systemctl reboot
+;;
+
+"$EXIT") i3-msg exit 
+;;
+
+esac
+
+fi
