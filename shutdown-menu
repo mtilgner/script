@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+# a shutdown menu for i3
+
 SHUTDOWN="shutdown"
 REBOOT="reboot"
 EXIT="logout"
