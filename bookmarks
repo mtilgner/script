@@ -1,0 +1,28 @@
+# jump to bookmarked directories using fzf.
+# define BOOKMARK_FILE and source this in .zshrc
+# jump to a bookmark using ALT + e.
+
+book-go() 
+{
+	local dir=$(cat $BOOKMARK_FILE | fzf)
+	if [[ -d "$dir" ]]
+	then
+		cd "$dir"
+		zle reset-prompt
+	fi
+}
+
+zle -N book-go
+bindkey "^[e" book-go
+
+# bookmark current directory
+book-add()
+{
+	pwd >> $BOOKMARK_FILE
+}
+
+# open the bookmark file
+book-edit()
+{
+	$EDITOR $BOOKMARK_FILE
+}
