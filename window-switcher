@@ -17,6 +17,7 @@ def win_switch(finder_command):
     windows = {}
     instances = {}
     workspaces = i3.get_workspaces()
+    count = 1
 
     for ws in workspaces:
 
@@ -27,8 +28,12 @@ def win_switch(finder_command):
 
         for win in ws_wins:
 
-            win_name = win['name']
+            # put a number (padded with 0s) before the actual name for better matching
+
+            win_name = '%s    %s' % (str(count).zfill(2), win['name'])
             win_id = win['id']
+            
+            count += 1
 
             # enumerate windows with the same name
 
