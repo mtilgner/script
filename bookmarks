@@ -4,7 +4,7 @@
 
 book-go() 
 {
-	local dir=$(cat $BOOKMARK_FILE | fzf)
+	local dir=$(fzf < "$BOOKMARK_FILE")
 	if [[ -d "$dir" ]]
 	then
 		cd "$dir"
